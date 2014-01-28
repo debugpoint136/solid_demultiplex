@@ -17,6 +17,10 @@ import os,sys,re,regex
 #+---- 1. Removed slurp mode of file intake
 #+-----2. Replaced array with hash lookup
 
+#Edit - 3 :  28 Jan, 2014 : 04:25 EST
+#+-----1. Changed the script to accept only 1 barcode
+#+-----2. Allowed 2 mismatches in the barcode detection
+
 # TBD : Chunkify the whole process and parallelize it
 
 if(len(sys.argv) != 7):
