@@ -21,8 +21,8 @@ import os,sys,re,regex
 
 if(len(sys.argv) != 7):
 	print "-" * 150
-	print "USAGE : python solid_demultiplex_pipeline.py <BARCODE, multiple separated by ,> <F3.csfasta> <F3.qual> <F5.csfasta> <F5.qual> <output directory> <sample_prefix>"
-	print "Example :  python solid_demultiplex_pipeline.py T233232,T342561 abc_file_has_F3.csfasta xyz_file_has_F3.qual asfc_file_has_F5.csfasta sdfs_file_has_F5.qual /home/dpuru/folder_name"
+	print "USAGE : python solid_demultiplex_pipeline.py <BARCODE> <F3.csfasta> <F3.qual> <F5.csfasta> <F5.qual> <output directory> <sample_prefix>"
+	print "Example :  python solid_demultiplex_pipeline.py T233232 abc_file_has_F3.csfasta xyz_file_has_F3.qual asfc_file_has_F5.csfasta sdfs_file_has_F5.qual /home/dpuru/folder_name"
 	print "This script will output 4 files in the mentioned folder, with all reads extracted for provided bar codes : -"
 	print "f3.csfasta"
 	print "f3.qual"
@@ -32,8 +32,8 @@ if(len(sys.argv) != 7):
 	exit()
 
 # argument 0 is the script name itself
-BARCD=[]
-BARCD=sys.argv[1].split(',') #which BARCODE (T233232)
+
+BARCD=sys.argv[1] #which BARCODE (T233232)
 F3CSFA=sys.argv[2]
 F3QUAL=sys.argv[3]
 F5CSFA=sys.argv[4]
@@ -43,14 +43,8 @@ OUTDIR=sys.argv[6]
 if not os.path.exists(OUTDIR):
 	os.makedirs(OUTDIR)
 
-PATTERN=""
 headerhash={} #hash to save all headers for re-use
 
-for i in range(len(BARCD)):
-	val="("+BARCD[i]+"){e<=1}|"
-	PATTERN=PATTERN+val
-
-FILTER=PATTERN.rstrip('|') #fine-tuning the filter condition
 
 #+----reading in F3.csfasta file
 
@@ -61,7 +55,7 @@ with open(OUTDIR+"/f3.csfasta","a",0) as f3csout:
 		for line in f :
 			cur_row=line.rstrip('\n')
 
-			if(regex.findall("("+FILTER+"){e<=1}", cur_row)):
+			if(regex.findall("("+BARCD+"){e<=2}", cur_row)):
 				f3csout.write(prev_row)
 				f3csout.write(os.linesep)
 				elem=prev_row.split('_F3')[0]
