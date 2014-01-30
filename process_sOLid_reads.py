@@ -112,7 +112,7 @@ for a in sys.argv[1:5] :
 	elif(n==3):
 		extract_header(header_file,"_F5-P2","f5csf")
 	elif(n==4):
-  		extract_header(header_file,"_F5-P2","f5qual")
+		extract_header(header_file,"_F5-P2","f5qual")
 
 #Part 3 : 
 
@@ -121,9 +121,7 @@ for a in sys.argv[1:5] :
 intersect1 = set(f3csfset).intersection(set(f3qualset))
 intersect2 = set(f5csfset).intersection(set(f5qualset))
 
-common_headers = set(intersect1).intersection( set(intersect2) )
-
-print common_headers
+common_headers = set(intersect1).intersection(set(intersect2))
 
 #------Part4 :
 
