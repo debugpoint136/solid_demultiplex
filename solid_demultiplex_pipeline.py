@@ -21,12 +21,15 @@ import os,sys,re,regex
 #+-----1. Changed the script to accept only 1 barcode
 #+-----2. Allowed 2 mismatches in the barcode detection
 
+#Edit - 4 : 16 Apr, 2014 : 03:36 EST
+#--------1. Making changes to allow mismatches from the user
+
 # TBD : Chunkify the whole process and parallelize it
 
 if(len(sys.argv) != 7):
 	print "-" * 150
-	print "USAGE : python solid_demultiplex_pipeline.py <BARCODE> <F3.csfasta> <F3.qual> <F5.csfasta> <F5.qual> <output directory> <sample_prefix>"
-	print "Example :  python solid_demultiplex_pipeline.py T233232 abc_file_has_F3.csfasta xyz_file_has_F3.qual asfc_file_has_F5.csfasta sdfs_file_has_F5.qual /home/dpuru/folder_name"
+	print "USAGE : python solid_demultiplex_pipeline.py <BARCODE> <allowed mismatches> <F3.csfasta> <F3.qual> <F5.csfasta> <F5.qual> <output directory> <sample_prefix>"
+	print "Example :  python solid_demultiplex_pipeline.py T233232 2 abc_file_has_F3.csfasta xyz_file_has_F3.qual asfc_file_has_F5.csfasta sdfs_file_has_F5.qual /home/dpuru/folder_name"
 	print "This script will output 4 files in the mentioned folder, with all reads extracted for provided bar codes : -"
 	print "f3.csfasta"
 	print "f3.qual"
@@ -38,11 +41,12 @@ if(len(sys.argv) != 7):
 # argument 0 is the script name itself
 
 BARCD=sys.argv[1] #which BARCODE (T233232)
-F3CSFA=sys.argv[2]
-F3QUAL=sys.argv[3]
-F5CSFA=sys.argv[4]
-F5QUAL=sys.argv[5]
-OUTDIR=sys.argv[6]
+MISMTCH=sys.argv[2] #get the allowed mismatch from the user
+F3CSFA=sys.argv[3]
+F3QUAL=sys.argv[4]
+F5CSFA=sys.argv[5]
+F5QUAL=sys.argv[6]
+OUTDIR=sys.argv[7]
 
 if not os.path.exists(OUTDIR):
 	os.makedirs(OUTDIR)
@@ -59,7 +63,7 @@ with open(OUTDIR+"/f3.csfasta","a",0) as f3csout:
 		for line in f :
 			cur_row=line.rstrip('\n')
 
-			if(regex.findall("("+BARCD+"){e<=2}", cur_row)):
+			if(regex.findall("("+BARCD+"){e<="+MISMTCH+"}", cur_row)):
 				f3csout.write(prev_row)
 				f3csout.write(os.linesep)
 				elem=prev_row.split('_F3')[0]
