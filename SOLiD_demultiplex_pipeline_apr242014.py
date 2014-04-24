@@ -1,13 +1,5 @@
 #!/bin/python
 
-#+-----------------------------------+
-#+----------Chandni Desai------------+
-#+----------Genomics Core------------+
-#+-----Scripps Research Institute----+
-#+----------Jan 20th, 2014-----------+
-#------------------------------------+
-
-
 import os,sys,re,regex
 from datetime import datetime
 
@@ -37,7 +29,7 @@ if(len(sys.argv) != 8):
 # argument 0 is the script name itself
 BARCD=[]
 BARCD1=sys.argv[1] #get 1st BARCODE (T233232)
-BARCD2=sys.argv[2] #get 2nd BARCODE (T302032)
+BARCD2=sys.argv[2] #get 2nd BARCODE (T302023)
 F3CSFA=sys.argv[3]
 F3QUAL=sys.argv[4]
 F5CSFA=sys.argv[5]
@@ -67,7 +59,7 @@ headerhash3={} #hash to save all headers for re-use
 
 # Create a summary file
 
-print "===== Summary of this run will get saved in README ====="
+print "===== Summary of this run will get saved in "+OUTDIR+"/"+CUROUTDIR+"/README ====="
 
 with open(CUROUTDIR+"/README","a",0) as SUM:
 	SUM.write("-"*75 + "\n")
@@ -91,8 +83,14 @@ cur_row=""
 with open(F3CSFA) as f:
 	for line in f :
 		cur_row=line.rstrip('\n')
+		
+		if(re.match(">", cur_row)) :
+			prev_row=cur_row
+			continue
+		
+		segm=cur_row[0:7]
 
-		if(regex.findall("\A("+BARCD1+"){e<=2}", cur_row)):
+		if(regex.findall("\A("+BARCD1+"){e<=2}", segm)):
 			with open(DIRBARCD1+"/f3.csfasta","a",0) as f3csout:
 				f3csout.write(prev_row)
 				f3csout.write(os.linesep)
@@ -101,7 +99,7 @@ with open(F3CSFA) as f:
 				f3csout.write(cur_row)
 				f3csout.write(os.linesep)
 			prev_row=cur_row
-		elif(regex.findall("\A("+BARCD2+"){e<=2}", cur_row)):
+		elif(regex.findall("\A("+BARCD2+"){e<=2}", segm)):
 			with open(DIRBARCD2+"/f3.csfasta","a",0) as f3csout:
 				f3csout.write(prev_row)
 				f3csout.write(os.linesep)
@@ -109,8 +107,6 @@ with open(F3CSFA) as f:
 				headerhash2[elem]=1
 				f3csout.write(cur_row)
 				f3csout.write(os.linesep)
-			prev_row=cur_row
-		elif(re.match(">", cur_row)) :
 			prev_row=cur_row
 		elif(cur_row != '\n') : 
 			with open(DIRNAIVE+"/f3.csfasta","a",0) as f3csout:
@@ -126,65 +122,68 @@ with open(F3CSFA) as f:
 #+----reading in F3.qual file
 with open(F3QUAL) as fh:
 	for row in fh:
-		fof=row.split('_F3')[0]
+		if(re.match(">", row)) :
+			fof=row.split('_F3')[0]
 	 
-		if fof in headerhash1:
-			with open(DIRBARCD1+"/f3.qual","a",0) as f3ql :
-				f3ql.write(row)
-				f3ql.write(next(fh))
+			if fof in headerhash1:
+				with open(DIRBARCD1+"/f3.qual","a",0) as f3ql :
+					f3ql.write(row)
+					f3ql.write(next(fh))
 
-		elif fof in headerhash2:
-			with open(DIRBARCD2+"/f3.qual","a",0) as f3ql :
-				f3ql.write(row)
-				f3ql.write(next(fh))
+			elif fof in headerhash2:
+				with open(DIRBARCD2+"/f3.qual","a",0) as f3ql :
+					f3ql.write(row)
+					f3ql.write(next(fh))
 		
-		elif fof in headerhash3:
-			with open(DIRNAIVE+"/f3.qual","a",0) as f3ql :
-				f3ql.write(row)
-				f3ql.write(next(fh))
+			elif fof in headerhash3:
+				with open(DIRNAIVE+"/f3.qual","a",0) as f3ql :
+					f3ql.write(row)
+					f3ql.write(next(fh))
 
 
 #+----reading in F5.csfasta file
 
 with open(F5CSFA) as fh:
 	for row in fh:
-		fof=row.split('_F5-P2')[0]
+		if(re.match(">", row)) :
+			fof=row.split('_F5-P2')[0]
 	 
-		if fof in headerhash1:
-			with open(DIRBARCD1+"/f5.csfasta","a",0) as f5csout :
-				f5csout.write(row)
-				f5csout.write(next(fh))
+			if fof in headerhash1:
+				with open(DIRBARCD1+"/f5.csfasta","a",0) as f5csout :
+					f5csout.write(row)
+					f5csout.write(next(fh))
 
-		elif fof in headerhash2:
-			with open(DIRBARCD2+"/f5.csfasta","a",0) as f5csout :
-				f5csout.write(row)
-				f5csout.write(next(fh))
+			elif fof in headerhash2:
+				with open(DIRBARCD2+"/f5.csfasta","a",0) as f5csout :
+					f5csout.write(row)
+					f5csout.write(next(fh))
 			
-		elif fof in headerhash3:
-			with open(DIRNAIVE+"/f5.csfasta","a",0) as f5csout :
-				f5csout.write(row)
-				f5csout.write(next(fh))
+			elif fof in headerhash3:
+				with open(DIRNAIVE+"/f5.csfasta","a",0) as f5csout :
+					f5csout.write(row)
+					f5csout.write(next(fh))
 
 #+----reading in F5.qual file
 
 with open(F5CSFA) as fh:
 	for row in fh:
-		fof=row.split('_F5-P2')[0]
+		if(re.match(">", row)) :
+			fof=row.split('_F5-P2')[0]
 	 
-		if fof in headerhash1:
-			with open(DIRBARCD1+"/f5.qual","a",0) as f5ql :
-				f5ql.write(row)
-				f5ql.write(next(fh))
+			if fof in headerhash1:
+				with open(DIRBARCD1+"/f5.qual","a",0) as f5ql :
+					f5ql.write(row)
+					f5ql.write(next(fh))
 
-		elif fof in headerhash2:
-			with open(DIRBARCD2+"/f5.qual","a",0) as f5ql :
-				f5ql.write(row)
-				f5ql.write(next(fh))
+			elif fof in headerhash2:
+				with open(DIRBARCD2+"/f5.qual","a",0) as f5ql :
+					f5ql.write(row)
+					f5ql.write(next(fh))
 			
-		elif fof in headerhash3:
-			with open(DIRNAIVE+"/f5.qual","a",0) as f5ql :
-				f5ql.write(row)
-				f5ql.write(next(fh))
+			elif fof in headerhash3:
+				with open(DIRNAIVE+"/f5.qual","a",0) as f5ql :
+					f5ql.write(row)
+					f5ql.write(next(fh))
 
 
 #End of script#
