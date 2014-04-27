@@ -1,0 +1,12 @@
+solid.project.name=test_project
+
+solid.f3.csfasta.name=/gpfs/group/flits/cdesai/20140203_PE_2/primary.20140218005341820/reads/solid0553_20140203_PE_2_43_44_F3.csfasta
+solid.f3.qual.name=/gpfs/group/flits/cdesai/20140203_PE_2/primary.20140218005341820/reads/solid0553_20140203_PE_2_43_44_F3_QV.qual
+solid.f5.csfasta.name=/gpfs/group/flits/cdesai/20140203_PE_2/primary.20140212124902133/reads/solid0553_20140203_PE_2_43_44_F5-P2.csfasta
+solid.f5.qual.name=/gpfs/group/flits/cdesai/20140203_PE_2/primary.20140212124902133/reads/solid0553_20140203_PE_2_43_44_F5-P2_QV.qual
+
+solid.output.folder=/gpfs/home/cdesai/Testing/sandbox/outputapr27
+
+solid.barcode1=T233232
+solid.barcode2=T302023
+
